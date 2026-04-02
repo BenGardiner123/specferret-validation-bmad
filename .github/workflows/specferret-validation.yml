@@ -39,7 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
-      - name: Resolve drift
-        run: chmod +x scripts/resolve-drift.sh; ./scripts/resolve-drift.sh
+      - name: Seed then resolve drift
+        run: chmod +x scripts/seed-breaking-drift.sh scripts/resolve-drift.sh; ./scripts/seed-breaking-drift.sh; ./scripts/resolve-drift.sh
       - name: Validate resolved state
         run: bun vendor/ferret.bundle.js lint --ci
