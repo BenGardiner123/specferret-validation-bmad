@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "generated": "2026-04-02T22:44:47.672Z",
+  "generated": "2026-04-02T23:16:37.336Z",
   "contracts": [
     {
       "id": "api.GET/example",
@@ -27,7 +27,7 @@
         }
       },
       "status": "stable",
-      "specFile": "contracts\\example.contract.md",
+      "specFile": "contracts/example.contract.md",
       "codeFile": null
     },
     {
@@ -65,7 +65,7 @@
         }
       },
       "status": "stable",
-      "specFile": "contracts\\search\\get-search.contract.md",
+      "specFile": "contracts/search/get-search.contract.md",
       "codeFile": null
     },
     {
@@ -97,7 +97,7 @@
         ]
       },
       "status": "stable",
-      "specFile": "contracts\\auth\\jwt.contract.md",
+      "specFile": "contracts/auth/jwt.contract.md",
       "codeFile": null
     },
     {
@@ -124,17 +124,17 @@
         ]
       },
       "status": "stable",
-      "specFile": "contracts\\analytics\\user-action.contract.md",
+      "specFile": "contracts/analytics/user-action.contract.md",
       "codeFile": null
     }
   ],
   "edges": [
     {
-      "from": "contracts\\search\\get-search.contract.md",
+      "from": "contracts/search/get-search.contract.md",
       "to": "auth.jwt"
     },
     {
-      "from": "contracts\\analytics\\user-action.contract.md",
+      "from": "contracts/analytics/user-action.contract.md",
       "to": "auth.jwt"
     }
   ],

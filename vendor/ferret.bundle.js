@@ -6055,14 +6055,14 @@ async function writeContext(store, projectRoot) {
       type: c.type,
       shape,
       status: c.status,
-      specFile: nodeType !== "code" ? parentNode?.file_path ?? null : null,
-      codeFile: nodeType === "code" ? parentNode?.file_path ?? null : null
+      specFile: nodeType !== "code" ? parentNode?.file_path?.replace(/\\/g, "/") ?? null : null,
+      codeFile: nodeType === "code" ? parentNode?.file_path?.replace(/\\/g, "/") ?? null : null
     };
   });
   const edges = dependencies.map((d) => {
     const sourceNode = nodeById.get(d.source_node_id);
     return {
-      from: sourceNode?.file_path ?? d.source_node_id,
+      from: (sourceNode?.file_path ?? d.source_node_id).replace(/\\/g, "/"),
       to: d.target_contract_id
     };
   });
@@ -10261,15 +10261,17 @@ async function restoreCommittedBaseline(store, contextPath) {
     if (!contract.specFile) {
       continue;
     }
-    const existing = contractsByFilePath.get(contract.specFile) ?? [];
+    const normalizedSpecFile = contract.specFile.replace(/\\/g, "/");
+    const existing = contractsByFilePath.get(normalizedSpecFile) ?? [];
     existing.push(contract);
-    contractsByFilePath.set(contract.specFile, existing);
+    contractsByFilePath.set(normalizedSpecFile, existing);
   }
   const dependencyTargetsByFilePath = new Map;
   for (const edge of context2.edges) {
-    const existing = dependencyTargetsByFilePath.get(edge.from) ?? [];
+    const normalizedFrom = edge.from.replace(/\\/g, "/");
+    const existing = dependencyTargetsByFilePath.get(normalizedFrom) ?? [];
     existing.push(edge.to);
-    dependencyTargetsByFilePath.set(edge.from, existing);
+    dependencyTargetsByFilePath.set(normalizedFrom, existing);
   }
   const allFilePaths = new Set([
     ...contractsByFilePath.keys(),
