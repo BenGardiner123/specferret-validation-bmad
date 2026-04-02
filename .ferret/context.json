@@ -1,0 +1,142 @@
+{
+  "version": "2.0",
+  "generated": "2026-04-02T22:44:47.672Z",
+  "contracts": [
+    {
+      "id": "api.GET/example",
+      "type": "api",
+      "shape": {
+        "response": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ]
+          }
+        }
+      },
+      "status": "stable",
+      "specFile": "contracts\\example.contract.md",
+      "codeFile": null
+    },
+    {
+      "id": "api.GET/search",
+      "type": "api",
+      "shape": {
+        "request": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        },
+        "response": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title"
+            ]
+          }
+        }
+      },
+      "status": "stable",
+      "specFile": "contracts\\search\\get-search.contract.md",
+      "codeFile": null
+    },
+    {
+      "id": "auth.jwt",
+      "type": "api",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "token": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "token",
+          "expiresAt"
+        ]
+      },
+      "status": "stable",
+      "specFile": "contracts\\auth\\jwt.contract.md",
+      "codeFile": null
+    },
+    {
+      "id": "event.user-action",
+      "type": "event",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "userId",
+          "action",
+          "timestamp"
+        ]
+      },
+      "status": "stable",
+      "specFile": "contracts\\analytics\\user-action.contract.md",
+      "codeFile": null
+    }
+  ],
+  "edges": [
+    {
+      "from": "contracts\\search\\get-search.contract.md",
+      "to": "auth.jwt"
+    },
+    {
+      "from": "contracts\\analytics\\user-action.contract.md",
+      "to": "auth.jwt"
+    }
+  ],
+  "needsReview": []
+}

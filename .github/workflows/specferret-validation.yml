@@ -1,0 +1,45 @@
+name: SpecFerret Validation (BMAD)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  baseline-pass:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Prepare baseline
+        run: bun vendor/ferret.bundle.js init --no-hook; bun vendor/ferret.bundle.js lint
+      - name: Validate no drift
+        run: bun vendor/ferret.bundle.js lint --ci
+
+  seeded-fail:
+    runs-on: ubuntu-latest
+    needs: baseline-pass
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Seed breaking drift
+        run: chmod +x scripts/seed-breaking-drift.sh; ./scripts/seed-breaking-drift.sh
+      - name: Expect CI failure on drift
+        run: |
+          set +e
+          bun vendor/ferret.bundle.js lint --ci
+          code=$?
+          set -e
+          if [ "$code" -eq 0 ]; then
+            echo "Expected non-zero exit for breaking drift"
+            exit 1
+          fi
+
+  resolution-pass:
+    runs-on: ubuntu-latest
+    needs: seeded-fail
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Resolve drift
+        run: chmod +x scripts/resolve-drift.sh; ./scripts/resolve-drift.sh
+      - name: Validate resolved state
+        run: bun vendor/ferret.bundle.js lint --ci
