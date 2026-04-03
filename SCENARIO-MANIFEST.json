@@ -1,8 +1,8 @@
 {
   "scenario": {
-    "name": "main-baseline",
-    "branch": "main",
-    "description": "Clean baseline: no drift expected"
+    "name": "nonbreaking-optional-add",
+    "branch": "scenario/nonbreaking-optional-add",
+    "description": "Non-breaking: refreshToken optional field added to auth.jwt properties. Not in required list. ferret classifies as non-breaking — node stays stable, lint exits 0."
   },
   "expected": {
     "exitCode": 0,

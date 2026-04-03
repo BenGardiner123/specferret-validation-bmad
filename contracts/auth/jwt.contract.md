@@ -15,7 +15,12 @@ ferret:
       expiresAt:
         type: string
         format: date-time
+      refreshToken:
+        type: string
     required: [id, email, token, expiresAt]
 ---
 
 # JWT Contract
+
+Added optional `refreshToken` field — not in the required list.
+This is a backwards-compatible addition: existing consumers are unaffected.
