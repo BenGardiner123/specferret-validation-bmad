@@ -15,7 +15,11 @@ ferret:
       expiresAt:
         type: string
         format: date-time
-    required: [id, email, token, expiresAt]
+    required: [id, email, token]
 ---
 
 # JWT Contract
+
+Removed `expiresAt` from required — same breaking change as the breaking-required-field scenario.
+Here, a downstream recommendations contract imports search, which imports auth.jwt,
+creating a 3-level chain that demonstrates transitive impact at depth 2.

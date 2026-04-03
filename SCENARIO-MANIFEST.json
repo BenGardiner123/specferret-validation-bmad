@@ -1,12 +1,12 @@
 {
   "scenario": {
-    "name": "main-baseline",
-    "branch": "main",
-    "description": "Clean baseline: no drift expected"
+    "name": "transitive-impact-depth",
+    "branch": "scenario/transitive-impact-depth",
+    "description": "Breaking with transitive depth: auth.jwt loses expiresAt (breaking). api.GET/search and event.user-action flagged at depth 1 (breaking count). api.GET/recommendations imports api.GET/search and is flagged at depth 2 (nonBreaking count)."
   },
   "expected": {
-    "exitCode": 0,
-    "driftClass": "clean",
-    "reviewRequired": false
+    "exitCode": 1,
+    "driftClass": "breaking",
+    "reviewRequired": true
   }
 }
