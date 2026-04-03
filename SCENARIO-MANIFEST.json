@@ -2,11 +2,12 @@
   "scenario": {
     "name": "code-first-extract",
     "branch": "scenario/code-first-extract",
-    "description": "Code-first extraction: auth.jwt contract references a codeFile. The shape in the contract matches the registered baseline — no drift. Demonstrates that codeFile metadata does not affect lint classification."
+    "description": "Code-first extraction: auth.jwt contract references a codeFile. Scenario asserts extract determinism by running ferret extract twice and requiring byte-identical generated contracts."
   },
   "expected": {
     "exitCode": 0,
     "driftClass": "clean",
-    "reviewRequired": false
+    "reviewRequired": false,
+    "extractDeterminism": true
   }
 }
