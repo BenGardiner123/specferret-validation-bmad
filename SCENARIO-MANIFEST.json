@@ -1,8 +1,8 @@
 {
   "scenario": {
-    "name": "main-baseline",
-    "branch": "main",
-    "description": "Clean baseline: no drift expected"
+    "name": "specferret-opinionated-layout",
+    "branch": "scenario/specferret-opinionated-layout",
+    "description": "Opinionated layout validation: contracts follow the BMAD-output folder structure. ferret.config.json uses the lint-first workflow. All contracts are stable and in sync with context.json. Lint exits 0."
   },
   "expected": {
     "exitCode": 0,
