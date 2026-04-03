@@ -2,11 +2,16 @@
   "scenario": {
     "name": "review-resolution-flow",
     "branch": "scenario/review-resolution-flow",
-    "description": "Post-review clean state: simulates a project where breaking drift was previously detected in auth.jwt, ferret review was run to acknowledge and resolve it, and context.json was re-scanned to match the current contract shape. Lint now exits 0."
+    "description": "Post-review clean state: repository includes explicit evidence artifacts for accept/update/reject decisions and asserts they are present during scenario checks."
   },
   "expected": {
     "exitCode": 0,
     "driftClass": "clean",
-    "reviewRequired": false
+    "reviewRequired": false,
+    "proofArtifacts": [
+      "evidence/review/accept-proof.md",
+      "evidence/review/update-proof.md",
+      "evidence/review/reject-proof.md"
+    ]
   }
 }
