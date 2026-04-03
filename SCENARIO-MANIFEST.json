@@ -1,12 +1,12 @@
 {
   "scenario": {
-    "name": "main-baseline",
-    "branch": "main",
-    "description": "Clean baseline: no drift expected"
+    "name": "breaking-required-field",
+    "branch": "scenario/breaking-required-field",
+    "description": "Breaking: expiresAt removed from auth.jwt required fields. api.GET/search and event.user-action both import auth.jwt and are flagged at depth 1."
   },
   "expected": {
-    "exitCode": 0,
-    "driftClass": "clean",
-    "reviewRequired": false
+    "exitCode": 1,
+    "driftClass": "breaking",
+    "reviewRequired": true
   }
 }

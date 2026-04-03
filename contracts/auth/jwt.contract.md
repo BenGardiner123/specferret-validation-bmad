@@ -15,7 +15,10 @@ ferret:
       expiresAt:
         type: string
         format: date-time
-    required: [id, email, token, expiresAt]
+    required: [id, email, token]
 ---
 
 # JWT Contract
+
+Removed `expiresAt` from the required list — this is a breaking change.
+Consumers may rely on `expiresAt` being present in every token response.
