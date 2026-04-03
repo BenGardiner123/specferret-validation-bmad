@@ -1,8 +1,8 @@
 {
   "scenario": {
-    "name": "main-baseline",
-    "branch": "main",
-    "description": "Clean baseline: no drift expected"
+    "name": "review-resolution-flow",
+    "branch": "scenario/review-resolution-flow",
+    "description": "Post-review clean state: simulates a project where breaking drift was previously detected in auth.jwt, ferret review was run to acknowledge and resolve it, and context.json was re-scanned to match the current contract shape. Lint now exits 0."
   },
   "expected": {
     "exitCode": 0,
