@@ -11,7 +11,7 @@ ferret:
         type: string
         format: email
       token:
-        type: string
+        type: integer
       expiresAt:
         type: string
         format: date-time
@@ -19,3 +19,6 @@ ferret:
 ---
 
 # JWT Contract
+
+Changed `token` field type from `string` to `integer` — this is a breaking change.
+All consumers producing or consuming string tokens will fail at runtime.
