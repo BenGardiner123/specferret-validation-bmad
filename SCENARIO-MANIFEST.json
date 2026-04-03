@@ -1,8 +1,8 @@
 {
   "scenario": {
-    "name": "main-baseline",
-    "branch": "main",
-    "description": "Clean baseline: no drift expected"
+    "name": "code-first-extract",
+    "branch": "scenario/code-first-extract",
+    "description": "Code-first extraction: auth.jwt contract references a codeFile. The shape in the contract matches the registered baseline — no drift. Demonstrates that codeFile metadata does not affect lint classification."
   },
   "expected": {
     "exitCode": 0,
