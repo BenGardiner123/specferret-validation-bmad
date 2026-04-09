@@ -1,12 +1,13 @@
 {
   "scenario": {
-    "name": "main-baseline",
-    "branch": "main",
-    "description": "Clean baseline: no drift expected"
+    "name": "breaking-required-field-added",
+    "branch": "scenario/breaking-required-field-added",
+    "description": "Breaking: scope field added to auth.jwt required array. Adding a required field breaks existing consumers who do not provide it. Covers S04 breaking class: required field added. Expects auth.jwt flagged as trigger with downstream contracts at depth 1."
   },
   "expected": {
-    "exitCode": 0,
-    "driftClass": "clean",
-    "reviewRequired": false
+    "exitCode": 1,
+    "driftClass": "breaking",
+    "reviewRequired": true,
+    "expectedTriggerContracts": ["auth.jwt"]
   }
 }
