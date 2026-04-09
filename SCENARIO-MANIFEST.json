@@ -12,6 +12,7 @@
       "directAtLeast": 2,
       "transitiveAtLeast": 1,
       "maxDepthAtLeast": 2
-    }
+    },
+    "expectedTriggerContracts": ["auth.jwt"]
   }
 }
