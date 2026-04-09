@@ -1,8 +1,8 @@
 {
   "scenario": {
-    "name": "transitive-impact-depth",
-    "branch": "scenario/transitive-impact-depth",
-    "description": "Breaking with transitive depth: auth.jwt loses expiresAt (breaking). api.GET/search and event.user-action flagged at depth 1 (breaking count). api.GET/recommendations imports api.GET/search and is flagged at depth 2 (nonBreaking count)."
+    "name": "depth-3-chain",
+    "branch": "scenario/depth-3-chain",
+    "description": "Breaking with depth-3 transitive chain: auth.jwt loses expiresAt (breaking). api.GET/search and event.user-action flagged at depth 1. api.GET/recommendations flagged at depth 2. api.GET/trending (imports api.GET/recommendations) flagged at depth 3. Proves BFS traversal does not truncate beyond depth 2."
   },
   "expected": {
     "exitCode": 1,
@@ -10,8 +10,9 @@
     "reviewRequired": true,
     "depthAssertions": {
       "directAtLeast": 2,
-      "transitiveAtLeast": 1,
-      "maxDepthAtLeast": 2
-    }
+      "transitiveAtLeast": 2,
+      "maxDepthAtLeast": 3
+    },
+    "expectedTriggerContracts": ["auth.jwt"]
   }
 }

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 manifest_path="${1:-SCENARIO-MANIFEST.json}"
-cli_cmd="${2:-bun vendor/ferret.bundle.js}"
+cli_cmd="${2:-ferret}"
 
 if ! test -f "$manifest_path"; then
   echo "Missing scenario manifest: $manifest_path" >&2
@@ -19,6 +19,7 @@ expected_depth_transitive_at_least="$(bun -e "const m = JSON.parse(await Bun.fil
 expected_max_depth_at_least="$(bun -e "const m = JSON.parse(await Bun.file(process.argv[1]).text()); const v = m.expected?.depthAssertions?.maxDepthAtLeast; console.log(v === undefined ? '' : String(v));" "$manifest_path")"
 expected_extract_determinism="$(bun -e "const m = JSON.parse(await Bun.file(process.argv[1]).text()); console.log(String(Boolean(m.expected?.extractDeterminism)));" "$manifest_path")"
 expected_proof_artifacts="$(bun -e "const m = JSON.parse(await Bun.file(process.argv[1]).text()); const arr = m.expected?.proofArtifacts; console.log(Array.isArray(arr) ? arr.join('\\n') : '');" "$manifest_path")"
+expected_trigger_contracts="$(bun -e "const m = JSON.parse(await Bun.file(process.argv[1]).text()); const arr = m.expected?.expectedTriggerContracts; console.log(Array.isArray(arr) ? arr.join('\\n') : '');" "$manifest_path")"
 
 if [ -z "$expected_exit_code" ] || [ -z "$expected_drift_class" ]; then
   echo "Manifest must define expected.exitCode and expected.driftClass" >&2
@@ -45,20 +46,20 @@ const breaking = Number(payload.breaking ?? 0);
 const nonBreaking = Number(payload.nonBreaking ?? 0);
 
 if (expectedClass === 'clean' && (breaking !== 0 || nonBreaking !== 0)) {
-  throw new Error('Expected clean drift class but JSON reports drift.');
+  throw new Error('Expected clean drift class but JSON reports drift. breaking=' + breaking + ' nonBreaking=' + nonBreaking);
 }
 
 if (expectedClass === 'breaking' && breaking <= 0) {
-  throw new Error('Expected breaking drift class but breaking count is not > 0.');
+  throw new Error('Expected breaking drift class but breaking count is not > 0. Got: ' + breaking);
 }
 
 if (expectedClass === 'non-breaking' && (breaking !== 0 || nonBreaking <= 0)) {
-  throw new Error('Expected non-breaking drift class but counts do not match.');
+  throw new Error('Expected non-breaking drift class but counts do not match. breaking=' + breaking + ' nonBreaking=' + nonBreaking);
 }
 
 const reviewRequiredInPayload = Boolean(breaking > 0);
 if (expectedReview !== reviewRequiredInPayload) {
-  throw new Error('Expected reviewRequired does not match inferred review requirement from breaking count.');
+  throw new Error('Expected reviewRequired=' + expectedReview + ' but inferred from payload: ' + reviewRequiredInPayload);
 }
 " artifacts/lint-ci.json "$expected_drift_class" "$expected_review_required"
 
@@ -94,13 +95,10 @@ fi
 
 if [ "$expected_extract_determinism" = "true" ]; then
   $cli_cmd extract > artifacts/extract-run-1.log
-  hash_one="$(bun -e "import { createHash } from 'node:crypto'; const files=[...new Bun.Glob('contracts/**/*.contract.md').scanSync('.')].sort(); const h=createHash('sha256'); for (const f of files){ h.update(f+'\\n'); h.update(await Bun.file(f).text()); h.update('\\n'); } console.log(h.digest('hex')); ")"
-
+  hash_one="$(bun -e "import { createHash } from 'node:crypto'; const files=[...new Bun.Glob('contracts/**/*.contract.md').scanSync('.')].sort(); const h=createHash('sha256'); for (const f of files){ h.update(f+'\\n'); h.update(await Bun.file(f).text()); h.update('\\n'); } console.log(h.digest('hex'));")"
   $cli_cmd extract > artifacts/extract-run-2.log
-  hash_two="$(bun -e "import { createHash } from 'node:crypto'; const files=[...new Bun.Glob('contracts/**/*.contract.md').scanSync('.')].sort(); const h=createHash('sha256'); for (const f of files){ h.update(f+'\\n'); h.update(await Bun.file(f).text()); h.update('\\n'); } console.log(h.digest('hex')); ")"
-
+  hash_two="$(bun -e "import { createHash } from 'node:crypto'; const files=[...new Bun.Glob('contracts/**/*.contract.md').scanSync('.')].sort(); const h=createHash('sha256'); for (const f of files){ h.update(f+'\\n'); h.update(await Bun.file(f).text()); h.update('\\n'); } console.log(h.digest('hex'));")"
   printf '{\n  "hashRun1": "%s",\n  "hashRun2": "%s",\n  "identical": %s\n}\n' "$hash_one" "$hash_two" "$([ "$hash_one" = "$hash_two" ] && echo true || echo false)" > artifacts/extract-determinism.json
-
   if [ "$hash_one" != "$hash_two" ]; then
     echo "Extract determinism assertion failed: hash mismatch between run 1 and run 2" >&2
     exit 1
@@ -117,6 +115,23 @@ if [ -n "$expected_proof_artifacts" ]; then
       exit 1
     fi
   done <<< "$expected_proof_artifacts"
+fi
+
+if [ -n "$expected_trigger_contracts" ]; then
+  bun -e "
+const fsPath = process.argv[1];
+const expectedRaw = process.argv[2];
+const expectedIds = expectedRaw.split('\\n').filter(Boolean);
+const payload = JSON.parse(await Bun.file(fsPath).text());
+const flagged = Array.isArray(payload.flagged) ? payload.flagged : [];
+const triggerIds = [...new Set(flagged.map((f) => f.triggeredByContractId ?? '').filter(Boolean))];
+for (const id of expectedIds) {
+  if (!triggerIds.includes(id)) {
+    throw new Error('Contract trigger assertion failed: expected trigger \"' + id + '\" not found. Actual triggers: ' + (triggerIds.length ? triggerIds.join(', ') : '(none)'));
+  }
+}
+console.log('Contract trigger assertion passed: ' + expectedIds.join(', '));
+" artifacts/lint-ci.json "$expected_trigger_contracts"
 fi
 
 echo "Scenario assertion passed for $manifest_path"
