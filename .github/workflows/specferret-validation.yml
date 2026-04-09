@@ -2,6 +2,11 @@ name: SpecFerret Validation (BMAD)
 
 on:
   workflow_dispatch:
+    inputs:
+      ferret_version:
+        description: 'Version of @specferret/cli to validate against'
+        default: '0.1.4'
+        required: false
 
 jobs:
   scenario-matrix:
@@ -31,10 +36,12 @@ jobs:
         with:
           ref: ${{ matrix.scenario.ref }}
       - uses: oven-sh/setup-bun@v2
+      - name: Install @specferret/cli from npm
+        run: bun add --global @specferret/cli@${{ inputs.ferret_version }}
       - name: Prepare baseline
-        run: bun vendor/ferret.bundle.js init --no-hook
+        run: ferret init --no-hook
       - name: Assert scenario
-        run: chmod +x scripts/assert-scenario.sh; ./scripts/assert-scenario.sh
+        run: chmod +x scripts/assert-scenario.sh; ./scripts/assert-scenario.sh SCENARIO-MANIFEST.json ferret
       - name: Upload scenario artifact
         if: always()
         uses: actions/upload-artifact@v4
