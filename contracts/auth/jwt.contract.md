@@ -2,7 +2,6 @@
 ferret:
   id: auth.jwt
   type: api
-  codeFile: src/auth/jwt.ts
   shape:
     type: object
     properties:
@@ -21,5 +20,5 @@ ferret:
 
 # JWT Contract
 
-`codeFile` is set to `src/auth/jwt.ts` to demonstrate code-first extraction.
-The shape is identical to the registered baseline — ferret lint exits 0.
+Shape sourced from `src/auth/jwt.ts` via `@ferret-contract` source annotation.
+No `codeFile` frontmatter field required — annotate in the TypeScript source instead.
