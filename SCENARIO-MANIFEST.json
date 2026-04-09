@@ -1,12 +1,19 @@
 {
   "scenario": {
-    "name": "main-baseline",
-    "branch": "main",
-    "description": "Clean baseline: no drift expected"
+    "name": "agent-mode-init",
+    "branch": "scenario/agent-mode-init",
+    "description": "Agent mode scaffolding (0.1.4+): ferret init --agent-targets claude,copilot,gemini creates canonical agent rules and adapter instruction packs. Scenario asserts clean lint after init and that all expected scaffolding files are present."
   },
   "expected": {
     "exitCode": 0,
     "driftClass": "clean",
-    "reviewRequired": false
+    "reviewRequired": false,
+    "proofArtifacts": [
+      ".github/specferret/canonical-agent-rules.md",
+      ".github/instructions/specferret-agent.instructions.md",
+      ".github/specferret/adapters/claude.adapter.md",
+      ".github/specferret/adapters/copilot.adapter.md",
+      ".github/specferret/adapters/gemini.adapter.md"
+    ]
   }
 }
