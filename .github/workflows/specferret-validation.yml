@@ -1,4 +1,4 @@
-name: SpecFerret Validation (BMAD)
+name: SpecFerret Validation (bmad)
 
 on:
   workflow_dispatch:
@@ -33,6 +33,12 @@ jobs:
             ref: scenario/specferret-opinionated-layout
           - id: agent-mode-init
             ref: scenario/agent-mode-init
+          - id: breaking-required-field-added
+            ref: scenario/breaking-required-field-added
+          - id: noop-no-drift
+            ref: scenario/noop-no-drift
+          - id: depth-3-chain
+            ref: scenario/depth-3-chain
     steps:
       - uses: actions/checkout@v4
         with:
