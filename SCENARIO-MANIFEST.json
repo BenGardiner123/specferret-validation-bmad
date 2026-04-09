@@ -2,7 +2,7 @@
   "scenario": {
     "name": "code-first-extract",
     "branch": "scenario/code-first-extract",
-    "description": "Code-first extraction: auth.jwt contract references a codeFile. Scenario asserts extract determinism by running ferret extract twice and requiring byte-identical generated contracts."
+    "description": "Code-first extraction (0.1.4+): src/auth/jwt.ts uses a @ferret-contract source annotation instead of the legacy codeFile frontmatter field. ferret extract is driven by codeContracts.include in ferret.config.json. Scenario asserts extract determinism by running ferret extract twice and requiring byte-identical generated contracts."
   },
   "expected": {
     "exitCode": 0,
