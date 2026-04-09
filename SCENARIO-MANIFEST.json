@@ -1,8 +1,8 @@
 {
   "scenario": {
-    "name": "main-baseline",
-    "branch": "main",
-    "description": "Clean baseline: no drift expected"
+    "name": "noop-no-drift",
+    "branch": "scenario/noop-no-drift",
+    "description": "No-op formatting change: auth.jwt properties are reordered (expiresAt first). Zero semantic change. ferret hashSchema uses key-sorted canonical JSON so property ordering produces identical hashes. Asserts exit 0 and clean drift class — proves false-positive protection (S03 hash stability)."
   },
   "expected": {
     "exitCode": 0,
