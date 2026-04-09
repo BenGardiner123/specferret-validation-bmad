@@ -31,6 +31,8 @@ jobs:
             ref: scenario/code-first-extract
           - id: specferret-opinionated-layout
             ref: scenario/specferret-opinionated-layout
+          - id: agent-mode-init
+            ref: scenario/agent-mode-init
     steps:
       - uses: actions/checkout@v4
         with:
@@ -39,7 +41,13 @@ jobs:
       - name: Install @specferret/cli from npm
         run: bun add --global @specferret/cli@${{ inputs.ferret_version }}
       - name: Prepare baseline
-        run: ferret init --no-hook
+        run: |
+          if [ -f scripts/scenario-init.sh ]; then
+            chmod +x scripts/scenario-init.sh
+            ./scripts/scenario-init.sh
+          else
+            ferret init --no-hook
+          fi
       - name: Assert scenario
         run: chmod +x scripts/assert-scenario.sh; ./scripts/assert-scenario.sh SCENARIO-MANIFEST.json ferret
       - name: Upload scenario artifact
